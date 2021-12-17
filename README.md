@@ -5,8 +5,8 @@
   * User will approve the gateway address for future interaction where the contract will receive user's token
   * User will call the gateway contract HTLC1.Create() with hashedlock (user keeps the secret) and timelock (can get refund after timeout), receiver of this token will be the burn address if the secret message is known.
   * The bridge service will clone the NFT on the second blockchain and also call HTLC2.Create(user's given hashedlock) and shorter timelock than the user.
-  * User will use the secret message to withdraw from HTLC2 
-  * The bridge will use the reveal secret to burn the token from HTLC1 (HTLC1.withdraw to burn_address). The burn address is predetermined when user create HTLC1. No body can change the destination (except refunding to user after timeout).
+  * User will use the secret message to withdraw from HTLC2. By doing so, the original secret is known publicly
+  * The bridge will use the revealed secret to burn the token from HTLC1 (HTLC1.withdraw to burn_address). The burn address is predetermined when user create HTLC1. No body can change the destination (except refunding to user after timeout).
 
   If the user change his/her mind, the user should not reveal the secret and wait for timeout passed. Then the user can call HTLC1.refund() to get the token back.
 ### There are two main components: 
