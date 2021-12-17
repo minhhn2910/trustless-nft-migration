@@ -46,7 +46,7 @@ Some other use cases:
 
 ### Limitations :
 * This demo may not support arbitrary NFT collections and arbitrary ERC721 Contract due to difference in contract ABI. We only support openzepellin ERC721 interface [https://github.com/OpenZeppelin/openzeppelin-contracts](https://github.com/OpenZeppelin/openzeppelin-contracts) and our ERC721Extension in the htlc-contracts folder
-* Known Bug and workaround : If the user Want to migrate token with ID1 and the target blockchain's NFT contract already has ID1 minted, The workflow will fail. The complete product will check this condition and automatically deploy new contract and store in database. We workaround this problem by starting over with either of the below : 
+* Known Bug and workaround : If the user wants to migrate token with ID1 and the target blockchain's NFT contract already has ID1 minted, The workflow will fail. The complete product will check this condition and automatically deploy new contract and store in database. We workaround this problem by starting over with either of the below : 
  
    * Test minting and migrating another token with different id (some random high number )
    * OR Deploy a new ERC721 contract and put it in the first place hardcoded list of the server_side `routes/blockchain.js` 
