@@ -16,7 +16,8 @@
 ### General Usage : 
   1. You can test each component alone. The Readme file inside each component (`htlc-contracts/README.md` and `webservice/README.md`) will tell more details about installing and running. 
   2. Private key is hardcoded in this repository for easy deployment and testing. It should only be used on testing with testnet. Dont use that private key on anything else. 
-  3. Fro webservice: (Backend works best on Linux, Node.js). Frontend requires  browser with Metamask installed and added configurations of the supported blockchain.  
+  3. For webservice: (Backend works best on Linux, Node.js). Frontend requires  browser with Metamask installed and added configurations of the supported blockchain.  
+  4. There is a single HTLCWrapper deployed to provide access to HTLC contracts in each blockchain. Details of the Wrapper is below & in `htlc-contracts` folder.
   
 ### Demo video and demo transaction on public testnet: 
   The demo video of the webserivce can be viewed here: [https://youtu.be/shXWVofKmcE](https://youtu.be/shXWVofKmcE). The transaction information and demo viewing assets on OpenSea is included in the video description 
