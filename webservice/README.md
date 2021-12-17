@@ -43,3 +43,9 @@ Some other use cases:
 2. HTLC viewer can be used to view the status any other HTLC with given ID that maynot related to this htlc migration 
 3. If the user refresh the browser or click View HTLC on step 11 before withdrawing. The user needs to input the secret (cached input is gone) and the htlc id again before he/she can click withdraw. 
 4. If the user changes his/her mind and do not want to migrate. The user must not process with step 11. Instead the user waits for timeout (default 10min) and click refund. 
+
+### Limitations :
+* This demo may not support arbitrary NFT collections and arbitrary ERC721 Contract due to difference in contract ABI. We only support openzepellin ERC721 interface [https://github.com/OpenZeppelin/openzeppelin-contracts](https://github.com/OpenZeppelin/openzeppelin-contracts) and our ERC721Extension in the htlc-contracts folder
+* This demo is not optimized or secured, it should only work as a proof of concept and should not be used in production
+* Better design should avoid spamming user and should concern about gas usage. 
+
