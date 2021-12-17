@@ -24,7 +24,7 @@ This webservice implements:
     npm install -g nodemon 
     nodemon start 
   ```
-#### Step to interact with the front end 
+#### Step to interact with the frontend 
 
 1. Open the browser and go to : localhost:3000/ 
 2. Connect to a blockchain network using metamask 
@@ -49,8 +49,10 @@ Some other use cases:
 * Known Bug and workaround : If the user Want to migrate token with ID1 and the target blockchain's NFT contract already has ID1 minted, The workflow will fail. The complete product will check this condition and automatically deploy new contract and store in database. We workaround this problem by starting over with either of the below : 
  
    * Test minting and migrating another token with different id (some random high number )
-   * OR Deploy a new ERC721 contract and put it in the first place hardcoded list of the server_side "routes/blockchain.js" 
+   * OR Deploy a new ERC721 contract and put it in the first place hardcoded list of the server_side `routes/blockchain.js` 
+   
    
 * This demo is not optimized or secured, it should only work as a proof of concept and should not be used in production
 * Better design should avoid spamming user and should concern about gas usage. 
+* Currently only 3 blockchains are supported. It can be easily extended by adding more information (RPC link, explorer link , deployed ERC721 addresses to mint, deployed HTLC Wrapper address) into the `routes/blockchain.js` file 
 
