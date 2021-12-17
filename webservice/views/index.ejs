@@ -1,0 +1,395 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title> HTLC NFT migrations </title>
+  <link rel="icon" type="image/png" href="metamask-fox.svg">
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+  
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.14.1/css/mdb.min.css" rel="stylesheet">
+  <script src="/js/web3.min.js"> </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"> </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+  <link rel="stylesheet" href="metamask.css" type="text/css">
+</head>
+
+<body>
+  <main class="container-fluid">
+    <header>
+      <h1 class="text-center"> Sample mint-and-burn hashed timelock contract migration for NFTs across blockchains </h1>
+
+    </header>
+
+    <!-- Part 1 Setting up Basic Actions and Status-->
+    <section>
+        <!-- <h3 class="card-title">Status</h3>-->
+      <div class="row justify-content-center">
+        <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
+
+          <p class="info-text alert alert-secondary">Current blockchain info: </p> <p class="info-text alert alert-secondary" >ChainId : &nbsp; <span id="chainId"></span>  &emsp; Name :&nbsp; <span id="networkName"></span></p>
+        </div>
+        <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
+          <p class="info-text alert alert-secondary"> Target Blockchain : &emsp; <span id="targetChainId"></span>  &emsp; <span id="targetNetworkName"></span> </p> 
+          <p>
+            <div class="btn-group">
+              <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Select the target blockchain to migrate
+              </button>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" href="#">Ethereum Rinkeby</a>
+                <a class="dropdown-item" href="#">Binance Smart Chain TestNet</a>
+                <a class="dropdown-item" href="#">Polygon Mumbai Testnet</a>
+              </div>
+            </div>
+        </p>
+
+
+        </div>
+
+      </div>
+    </section>
+
+    <section>
+      <div class="row d-flex justify-content-center">
+        <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
+          <div class="card">
+
+
+            <div class="card-body">
+              <h4 class="card-title">1. Connect to Metamask on your original blockchain</h4>
+              <p class="card-text"> Make sure you the below is the correct address</p>
+              <button class="btn btn-primary btn-lg btn-block mb-3" id="connectButton" disabled></button>
+
+              <p class="info-text alert alert-secondary">Your address : <span id="getAccountsResult"></span></p>
+            </div>
+
+
+          </div>
+
+
+
+            <div class="card ">
+              <div class="card-body">
+                <h4 class="card-title">2. Input your NFT information here to view </h4>
+
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon3">ERC721 Addr:</span>
+                  </div>
+                  <input type="text" class="form-control" id="nft-view-addr-input" aria-describedby="basic-addon3">
+                </div>
+
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon3">Token ID:</span>
+                  </div>
+                  <input type="text" class="form-control" id="nft-view-id-input" aria-describedby="basic-addon3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon3">Approve status:</span>
+                  </div>
+                  <input disabled type="text" class="form-control" id="nft-approve-status-input" aria-describedby="basic-addon3">
+                </div>
+
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon3">Owner:</span>
+                  </div>
+                  <input disabled type="text" class="form-control" id="nft-view-owner-input" aria-describedby="basic-addon3">
+
+                </div>
+
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon3">History hash:</span>
+                  </div>
+                  <input disabled type="text" class="form-control" id="nft-view-history-hash-input" aria-describedby="basic-addon3">
+
+                </div>
+
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon3">URI:</span>
+                  </div>
+                  <input disabled type="text" class="form-control" id="nft-view-uri-input" aria-describedby="basic-addon3">
+                </div>
+
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon3">History URI (optional):</span>
+                  </div>
+                  <input disabled type="text" class="form-control" id="nft-view-history-uri-input" aria-describedby="basic-addon3">
+
+                 
+
+                </div>
+                <input type="hidden" class="form-control" id="target-nft-address-hidden" aria-describedby="basic-addon3">
+                <input type="hidden" class="form-control" id="target-nft-id-hidden" aria-describedby="basic-addon3">
+
+                <button class="btn btn-primary btn-sm  " id="viewNFTButtonBase" >ViewNFT Standard format</button>
+                <button class="btn btn-primary btn-sm  " id="viewNFTButtonExtended" >ViewNFT Extended format</button>
+                <button class="btn btn-primary btn-sm " id="approveNFTButton" >Approve Token</button>
+              </div>
+              <button class="btn btn-primary btn-lg " id="requestMintNFTButton" >Request Cloning NFT on the second Blockchain</button>
+
+              <p class="info-text alert alert-secondary">NFT interaction status: <span id="NFTInteractionStatus">No information</span></p>
+            </div>
+
+
+
+
+
+
+        </div>
+
+        <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
+          <div class="card ">
+            <div class="card-body">
+              <h4 class="card-title">3. Create a hashed timelock contract to migrate </h4>
+              <h4 class="card-title" id="step4-header" style="display:none;">4. Check the HTLC contract on the second blockchain and withdraw </h4>
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="basic-addon3">Token Receiver :</span>
+                </div>
+                <input disabled type="text" class="form-control" id="htlc-receiver-input" aria-describedby="basic-addon3" value = "0x0000000000000000000000000000000000000001">
+              </div>
+
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="basic-addon3">Hashlock:</span>
+                </div>
+                <input type="text" class="form-control" id="htlc-hashlock-input" aria-describedby="basic-addon3">
+              </div>
+
+
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="basic-addon3">TimeLock expiry (seconds):</span>
+                </div>
+                <input type="text" class="form-control" id="htlc-timelock-input" aria-describedby="basic-addon3" value = 600>
+
+
+                <input disabled type="text" class="form-control" id="htlc-timelock-relative-input" aria-describedby="basic-addon3" >
+
+              </div>
+
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="basic-addon3">Forwardlink (link to new contract):</span>
+                </div>
+                <input type="text" class="form-control" id="htlc-forwardlink-input" aria-describedby="basic-addon3">
+
+              </div>
+
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="basic-addon3">NFT contract:</span>
+                </div>
+                <input disabled type="text" class="form-control" id="htlc-nft-contract-input" aria-describedby="basic-addon3">
+              </div>
+
+              <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon3">NFT id:</span>
+                  </div>
+                  <input disabled type="text" class="form-control" id="htlc-nft-id-input" aria-describedby="basic-addon3">
+              </div>
+
+              <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon3">Sender Address:</span>
+                  </div>
+                  <input disabled type="text" class="form-control" id="htlc-sender-input" aria-describedby="basic-addon3">
+              </div>
+
+
+
+              <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon3">HTLC Status:</span>
+                  </div>
+                  <input disabled type="text" class="form-control" id="htlc-withdraw-status" aria-describedby="basic-addon3">
+
+
+              </div>
+
+              <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon3">Secret Lock:</span>
+                  </div>
+                  <input type="text" class="form-control" id="htlc-secret-input" aria-describedby="basic-addon3">
+
+              </div>
+              <div class="input-group mb-3">
+
+                <button class="btn btn-primary btn-md " id="RandomSecretHTLCButton" >Randomize Hashlock</button>
+
+                <button class="btn btn-primary btn-md " id="CreateHTLCButton" >Create New HTLC Contract</button>
+              </div>
+
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="basic-addon3">HTLC Contract ID:</span>
+                </div>
+                <input type="text" class="form-control" id="htlc-contract-id-input" aria-describedby="basic-addon3">
+                <input type="hidden" class="form-control" id="htlc-source-id-hidden" aria-describedby="basic-addon3">
+                <input type="hidden" class="form-control" id="htlc-source-blockchain-hidden" aria-describedby="basic-addon3">
+
+                  <button class="btn btn-primary btn-lg btn-block mb-3" id="ViewHTLCContractButton" >View HTLC Contract</button>
+            </div>
+
+
+
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="basic-addon3"> Interact with Contract:</span>
+            </div>
+              <button class="btn btn-primary btn-md " id="WithdrawHTLCContractButton" > Withdraw </button>
+              <button class="btn btn-primary btn-md " id="RefundHTLCContractButton" > Refund </button>
+
+              <button class="btn btn-primary btn-lg btn-block mb-3" id="nextStepButton" >Next Step</button>
+        </div>
+
+              <p class="info-text alert alert-secondary">Interaction Status: <span id="HTLCcontractStatus">No information</span></p>
+            </div>
+          </div>
+
+
+        </div>
+
+
+
+
+      </div>
+      <div class="row  d-flex justify-content-center mt-3">
+        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+          Development mode (Mint test NFTs)
+        </button>
+        <button class="btn btn-danger" type="button" onClick="window.location.reload();">Start Over</button>
+      </div>
+      <div class="collapse" id="collapseExample">
+
+        <div class="row  d-flex justify-content-center mt-3">
+
+          <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
+            <div class="card ">
+              <div class="card-body">
+                <h4 class="card-title">(Development mode) Test minting NFT </h4>
+
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon3">Mint To Addr:</span>
+                  </div>
+                  <input type="text" class="form-control" id="nft-mint-addr-input" aria-describedby="basic-addon3">
+                </div>
+
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon3">Mint ID:</span>
+                  </div>
+                  <input type="text" class="form-control" id="nft-mint-id-input" aria-describedby="basic-addon3">
+                </div>
+
+
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon3">Mint history hash:</span>
+                  </div>
+                  <input type="text" class="form-control" id="nft-mint-history-hash-input" aria-describedby="basic-addon3">
+
+                </div>
+
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon3">Mint URI:</span>
+                  </div>
+                  <input type="text" class="form-control" id="nft-mint-uri-input" aria-describedby="basic-addon3">
+                </div>
+
+
+                <button class="btn btn-primary btn-lg btn-block mb-3" id="mintNFTBase" >mintNFTBase</button>
+
+                <button class="btn btn-primary btn-lg btn-block mb-3" id="mintNFTFull" >mintNFTFull</button>
+                <p class="info-text alert alert-secondary">Contract Status: <span id="contractStatus">Not clicked</span></p>
+
+
+              </div>
+            </div>
+
+
+          </div>
+
+
+
+
+
+
+        </div>
+
+      </div>
+
+      <div class="row  d-flex justify-content-center mt-3">
+
+
+
+    </div>
+
+    </section>
+
+    <!-- /Part 1 -->
+
+    <section>
+
+
+
+    </section>
+
+
+  </main>
+
+  <script src="/js/metamask-onboarding.bundle.js" defer></script>
+  <script src="/js/contract.js" defer></script>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+  
+  <script>
+            var ERCBaseABI, ERCExtendedABI, HTLCWrapperABI, ERCBaseMintableABI;
+            $.getJSON('/abi/ERC721Base.json', function (json) {
+                  ERCBaseABI = json;
+                });
+
+            $.getJSON('/abi/ERC721Extended.json', function (json) {
+                  ERCExtendedABI = json;
+                });
+
+            $.getJSON('/abi/HTLCWrapper.json', function (json) {
+                  HTLCWrapperABI = json;
+                });
+            $.getJSON('/abi/ERC721BaseMintable.json', function (json) {
+                  ERCBaseMintableABI = json;
+                });
+
+                $(document).on('click', '.dropdown-menu a', function() {
+                    var temp_val = $(this).html();
+                    
+ 
+                    var keys = [];
+                    $.each(supported_network, function(key, value) {
+             
+                        if (value[1] == temp_val)
+                          {
+                            $("#targetChainId").html(key);
+                            $("#targetNetworkName").html(value[1]);
+                          }
+                    });
+
+                });
+               
+  </script>
+</body>
+
+</html>
