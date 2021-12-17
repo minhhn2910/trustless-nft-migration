@@ -19,3 +19,57 @@
   
 ### Demo video and demo transaction on public testnet: 
   The demo video of the webserivce can be viewed here: [https://youtu.be/shXWVofKmcE](https://youtu.be/shXWVofKmcE). The transaction information and demo viewing assets on OpenSea is included in the video description 
+  
+  
+### Data structure and function for interacting with each HTLC entry in the HTLC Wrapper: 
+```
+struct LockContract {
+        address sender;  // the Sender to receive the token after timeout 
+        address receiver; // The receiver if the preimage is known
+        address tokenContract; //ERC721 token address
+        uint256 tokenId; // ERC721 token id
+        bytes32 hashlock; // the hashlock 
+        // locked UNTIL this time. Unit depends on consensus algorithm. Generally seconds in ethereum-like networks
+        uint256 timelock;
+        bool withdrawn; //withdraw can either mean burn or withdraw. Burn => receiver = 0x00 or 0x01
+        bool refunded; 
+        bytes32 preimage; // The secret used to create the hashlock : hashlock = sha256(preimage)
+        uint256 blocknumber; //store the blocknumber when the final tx is finalized (either withdraw or refund). For faster retreiving  & verifying
+        bytes32 forwardlink; //store the  forwardlink to the contract on the next blockchain. Because the next address maynot be the same format as on this blockchain. It should be in hashed form (type byte32 instead of address)
+}
+```
+
+```
+  function newContract(
+        address _receiver,
+        bytes32 _hashlock,
+        uint256 _timelock,
+        address _tokenContract,
+        uint256 _tokenId,
+        bytes32 _forwardlink //link to the contract in the next blockchain (if applicable)
+    )
+```
+```
+ function withdraw(bytes32 _contractId, bytes32 _preimage)
+ function refund(bytes32 _contractId)
+ function getContract(bytes32 _contractId)
+```
+### Extra Data and Extension for ERC721 to Verify identity : 
+
+```
+      // hash of the migration history path in this order "contract_addr1, chain_name1, contract_addr2, chain_name2"
+      // NFT.id remains the same during its history
+      // NFT.URI remains the same
+      // use for verifying the authenticity of the NFT history
+
+      mapping(uint256 => bytes32) private migration_history;
+
+      // Optional. User can just keep the history raw data on a separate document and provide when necessary for verification.
+      // URL for storing the history string publicly for everyone to verify. The content must be mutable (append new history after each migration to a new chain)
+      // The string may be long (e.g. after more than 10 migrations between blockchains). Thus, a public URL is the way to conserve space
+      mapping(uint256 => string) private _historyURIs;
+```
+
+```
+ Other methods please refer to the file : trustless-nft-migration/htlc-contracts/contracts/ERC721Extension.sol
+```
