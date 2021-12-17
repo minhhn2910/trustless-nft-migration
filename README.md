@@ -3,7 +3,7 @@
   Basic Workflow (Successful Migration):
   * Each blockchain will have a gateway (a HTLC wrapper contract containing the record and methods (create,withdraw,refund) for each HTLC)
   * User will approve the gateway address for future interaction where the contract will receive user's token
-  * User will call the gateway contract HTLC1.Create() with hashedlock (user keeps the secret) and timelock (can get refund after timeout), receiver of this token will be the burned address if the secret message is known.
+  * User will call the gateway contract HTLC1.Create() with hashedlock (user keeps the secret) and timelock (can get refund after timeout), receiver of this token will be the burn address if the secret message is known.
   * The bridge service will clone the NFT on the second blockchain and also call HTLC2.Create(user's given hashedlock) and shorter timelock than the user.
   * User will use the secret message to withdraw from HTLC2 
   * The bridge will use the reveal secret to burn the token from HTLC1 (HTLC1.withdraw to burn_address). The burn address is predetermined when user create HTLC1. No body can change the destination (except refunding to user after timeout).
