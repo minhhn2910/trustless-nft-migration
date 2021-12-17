@@ -7,6 +7,7 @@
   * The bridge service will clone the NFT on the second blockchain and also call HTLC2.Create(user's given hashedlock) and shorter timelock than the user.
   * User will use the secret message to withdraw from HTLC2. By doing so, the original secret is known publicly
   * The bridge will use the revealed secret to burn the token from HTLC1 (HTLC1.withdraw to burn_address). The burn address is predetermined when user create HTLC1. No body can change the destination (except refunding to user after timeout).
+  * The workflow (both sucess and refund) is demonstrated in the test script : `./htlc-contracts/test/htlcERC721Migration.js`
 
   If the user change his/her mind, the user should not reveal the secret and wait for timeout passed. Then the user can call HTLC1.refund() to get the token back.
 ### There are two main components: 
