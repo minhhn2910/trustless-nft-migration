@@ -22,7 +22,7 @@
   The demo video of the webserivce can be viewed here: [https://youtu.be/shXWVofKmcE](https://youtu.be/shXWVofKmcE). The transaction information and demo viewing assets on OpenSea is included in the video description 
   
   
-### Data structure and function for interacting with each HTLC entry in the HTLC Wrapper: 
+### Data structure and function for interacting with each HTLC entry in the HTLCWrapper contract: 
 ```
 struct LockContract {
         address sender;  // the Sender to receive the token after timeout 
