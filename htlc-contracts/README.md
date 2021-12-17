@@ -3,11 +3,15 @@
   They can be tested using ganache testnet locally. 
   The test is written on two HTLC wrappers on a single blockchain (This will behave similar to how 2 htlcs on two blockchain should work). For multiple blockchain please use the webservice. 
 ## Run Tests
-* Install dependencies
+
+* Install Nodejs and npm [sample guide for linux](https://linuxhint.com/install-node-js-npm-ubuntu-s20-04/)
+* Install ganache-cli, type: `npm install -g ganache-cli`
 * Start [Ganache](https://www.trufflesuite.com/ganache) with network ID `4447`
 * Run the [Truffle](https://www.trufflesuite.com/truffle) tests
 
 Commands to use: 
+
+$ cd to the current directory (htlc-contracts)
 ```
 $ npm install
 $ npm run ganache-start
